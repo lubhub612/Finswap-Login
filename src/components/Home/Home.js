@@ -411,7 +411,8 @@ const [refId,setRefId]=useState('')
                 <div
                   className='col-lg-5 col-md-8  p-4 m-2 shadow2 rounded-1 '
                   style={{
-                    backgroundColor: 'rgb(255 255 255)',
+                  //  backgroundColor: 'rgb(255 255 255)',
+                  backgroundImage:`url(${process.env.PUBLIC_URL+ "./assets/green_leave154.jpg"})`
                   }}
                 >
                   <div className='col py-4 '>
@@ -470,11 +471,11 @@ const [refId,setRefId]=useState('')
                       </div>
                     </div>
 
-                    <div className='row  mx-2 '>
+                  {/*}  <div className='row  mx-2 '>
                         <div className='col pt-2'>
                           <label htmlFor='input ' className='pb-2' 
                            style={{
-                             backgroundColor: 'rgb(0 0 0)',
+                            color: 'rgb(255 255 255)',
                          }}>
                             {' '}
                             Enter Amount
@@ -495,7 +496,36 @@ const [refId,setRefId]=useState('')
                             onChange={(e) => setDepositamount(e.target.value)}
                           />
                         </div>
+                          </div>  */}
+
+                    <div className='row'>
+                      <div className='col d-flex justify-content-center'>
+                      <label htmlFor='input ' className='pb-2' 
+                           style={{
+                            color: 'rgb(255 255 255)',
+                         }}>
+                            {' '}
+                            Enter Amount
+                          </label>
                       </div>
+                      <div className='col d-flex justify-content-center'>
+                      <input
+                            style={{
+                              backgroundColor: '#D9D9D9',
+                              borderRadius: '5px',
+                              color: '#2f323b ',
+                              fontWeight: '500',
+                              fontSize: '18px',
+                            }}
+                            className='form-control '
+                            type='text'
+                            placeholder='Enter Value'
+                            aria-label='default input example'
+                            value={depositAmount}
+                            onChange={(e) => setDepositamount(e.target.value)}
+                          />
+                      </div>
+                    </div>
                     <br/>
 
                     <div className='row'>
