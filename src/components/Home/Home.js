@@ -133,8 +133,8 @@ const [refId,setRefId]=useState('')
     let currentAccount;
 
     if (window.ethereum) {
-      if (window.ethereum.networkVersion !== '56') {
-        toast.error('Please connect to Binance Mainnet');
+      if (window.ethereum.networkVersion !== '80001') {
+        toast.error('Please connect to Polygon Testnet');
       }
     }
 
@@ -733,7 +733,7 @@ const [refId,setRefId]=useState('')
                           )}
                           {!approveBtn ? (
                             <>
-                              {buttonStatus === 'deposit' ? (
+                              {buttonStatus === 'register' ? (
                                 <div
                                   class='spinner-border text-success'
                                   role='status'
