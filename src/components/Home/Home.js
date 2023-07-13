@@ -30,7 +30,8 @@ export default function Home() {
   const [popUpwithdrawValue, setPopupWithdrawValue] = useState('');
   const [popUpClaimValue, setPopupClaimValue] = useState('');
   const [isValid, setIsValid] = useState(false);
-  const [buttonStatus, setButtonStatus] = useState('approve');
+//const [buttonStatus, setButtonStatus] = useState('approve');
+const [buttonStatus, setButtonStatus] = useState('');
   const [toggleCard, setToggleCard] = useState('deposit');
   const [depositAmount, setDepositamount] = useState(0);
   const [approveBtn, setApproveBtn] = useState(true);
@@ -414,6 +415,7 @@ const [refId,setRefId]=useState('')
   const handleApprovePOLKADOT = async () => {
 
     try {
+      setButtonStatus('approve');
       let _PolkadotContract = await PolkadotContract();
       
       let _approve = await _PolkadotContract.approve(
@@ -422,20 +424,31 @@ const [refId,setRefId]=useState('')
       );
       let waitForTx = await _approve.wait();
       if (waitForTx) {
-        
-        setButtonStatus('register');
+        setButtonStatus('');
+        setApproveBtn(false);
+      //  setButtonStatus('register');
       toast.success('Approved successfull.');
       }
     } catch (error) {
       console.log(error);
+      setButtonStatus('');
+      setApproveBtn(true);
+
+      toast.error('Something went wrong!');
     }
   };
 
 
   const handleUserRegisterPOLKADOT = async () => {
    
-
+    //https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?address=asd32&refid=GD135729&amount=50
+   
     try {
+
+   if (!userAddress) {
+    return toast.error('Connect Wallet first!');
+  }
+   setButtonStatus('register');
       let _PolkadotMLMContract = await PolkadotMLMContract();
     
 
@@ -449,34 +462,58 @@ const [refId,setRefId]=useState('')
       );
       let waitForTx = await _buy.wait();
       if (waitForTx) {
+        let _reg = axios.post(
+          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&refid=GD135729&amount=${depositAmount}`
+        );
+        console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
+        setButtonStatus('');
+        setApproveBtn(false);
       toast.success('Registration successfull.');
       }
       
     } catch (error) {
       console.log(error);
+      let parse = JSON.stringify(error);
+      let _par = JSON.parse(parse);
+      if (_par?.reason) {
+        toast.error(_par?.reason);
+      }
+      console.log( _par);
+      setButtonStatus('');
     }
   };
 
 
   const handleUserLoginPOLKADOT = async () => {
    
-
+ // https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=asd32
     try {
+
+      if (!userAddress) {
+        return toast.error('Connect Wallet first!');
+      }
       let _PolkadotMLMContract = await PolkadotMLMContract();
     
-
+    
+      let _handleLogin = await _PolkadotMLMContract.userLogin();
+      if (_handleLogin) {
+      let _logi = await axios.get(
+        `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=${userAddress}`
+      );
       
-      
-      let _buy = await _PolkadotMLMContract.userLogin();
-
+      console.log(_logi);
       
         toast.success('Login success!');
-     //   setButtonStatus('');
-    
+       setButtonStatus('');
+      }
       
     } catch (error) {
       console.log(error);
+       let parse = JSON.stringify(error);
+      let _par = JSON.parse(parse);
+      console.log( _par);
       toast.error('Please register yourself!');
+      setButtonStatus('');
     }
   };
 
@@ -654,7 +691,7 @@ const [refId,setRefId]=useState('')
                         )}
                       </div>
                       <div className='col d-flex justify-content-center'>
-                        {buttonStatus === 'register' ? (
+                     {/*}   {buttonStatus === 'register' ? (
                           <button
                           onClick={handleUserRegisterPOLKADOT}
                           className='btn btn-outline border-white text-white withdrawButton'
@@ -668,8 +705,57 @@ const [refId,setRefId]=useState('')
                         >
                         Approve  
                         </button>
-                        )}
-                      </div>
+                        )}  */}
+
+                      {approveBtn ? (
+                            <>
+                              {buttonStatus === 'approve' ? (
+                                <div
+                                  class='spinner-border text-success'
+                                  role='status'
+                                >
+                                  <span class='visually-hidden'>
+                                    Loading...
+                                  </span>
+                                </div>
+                              ) : (
+                                <button
+                                  className={`btn btn-outline border-white text-white  withdrawButton`}
+                                  onClick={handleApprovePOLKADOT}
+                                  // onClick={handleShow}
+                                >
+                                  APPROVE
+                                </button>
+                              )}{' '}
+                            </>
+                          ) : (
+                            ''
+                          )}
+                          {!approveBtn ? (
+                            <>
+                              {buttonStatus === 'deposit' ? (
+                                <div
+                                  class='spinner-border text-success'
+                                  role='status'
+                                >
+                                  <span class='visually-hidden'>
+                                    Loading...
+                                  </span>
+                                </div>
+                              ) : (
+                                <button
+                                  className={`btn btn-outline border-white text-white  withdrawButton`}
+                                  onClick={handleUserRegisterPOLKADOT}
+                                  // onClick={handleShow}
+                                >
+                                  Register
+                                </button>
+                              )}{' '}
+                            </>
+                          ) : (
+                            ''
+                          )}
+                        </div> 
                     </div>
                   </div>
                 </div>
