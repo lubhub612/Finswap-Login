@@ -10,6 +10,14 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
+import { ethers } from 'ethers';
+import polkadotmlmabi from '../../abis/POLKADOT_MLM.json';
+import polkadotabi from '../../abis/POLKADOT_token.json';
+
+const POLKADOT_MLM_CONTRACT_ADDRESS = '0x5E03f8AD520E21fB9E4D2F235DF9733A624c38a7';
+const POLKADOT_TOKEN_ADDRESS = '0xcbb8094939A0D024f037602B8d36b2E00c3acA76';
+
+
 export default function Home() {
   const [isOwner, setIsOwner] = useState(false);
   const [userAddress, setUserAddress] = useState('');
@@ -43,6 +51,36 @@ const [refId,setRefId]=useState('')
       
     }
   }, [])
+
+  const PolkadotMLMContract = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const PolkadotMLMContract = new ethers.Contract(
+        POLKADOT_MLM_CONTRACT_ADDRESS,
+        polkadotmlmabi,
+        signer
+      );
+      return PolkadotMLMContract;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const PolkadotContract = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const PolkadotContract = new ethers.Contract(
+        POLKADOT_TOKEN_ADDRESS,
+        polkadotabi,
+        signer
+      );
+      return PolkadotContract;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
   const handleUrl = () => {
     try {
@@ -373,6 +411,75 @@ const [refId,setRefId]=useState('')
     }
   };
 
+  const handleApprovePOLKADOT = async () => {
+
+    try {
+      let _PolkadotContract = await PolkadotContract();
+      
+      let _approve = await _PolkadotContract.approve(
+        POLKADOT_MLM_CONTRACT_ADDRESS,
+        ethers.utils.parseEther(depositAmount) 
+      );
+      let waitForTx = await _approve.wait();
+      if (waitForTx) {
+        
+        setButtonStatus('register');
+      toast.success('Approved successfull.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const handleUserRegisterPOLKADOT = async () => {
+   
+
+    try {
+      let _PolkadotMLMContract = await PolkadotMLMContract();
+    
+
+      if (depositAmount <= 0) {
+        return toast.error('Value should be positive.');
+      }
+      
+      
+      let _buy = await _PolkadotMLMContract.userRegister(
+        ethers.utils.parseEther(depositAmount) 
+      );
+      let waitForTx = await _buy.wait();
+      if (waitForTx) {
+      toast.success('Registration successfull.');
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const handleUserLoginPOLKADOT = async () => {
+   
+
+    try {
+      let _PolkadotMLMContract = await PolkadotMLMContract();
+    
+
+      
+      
+      let _buy = await _PolkadotMLMContract.userLogin();
+
+      
+        toast.success('Login success!');
+     //   setButtonStatus('');
+    
+      
+    } catch (error) {
+      console.log(error);
+      toast.error('Please register yourself!');
+    }
+  };
+
   return (
     <>
       <ToastContainer autoClose={3000} />
@@ -539,7 +646,7 @@ const [refId,setRefId]=useState('')
                           </div>
                         ) : (
                           <button
-                            onClick={handleUserLogin}
+                            onClick={handleUserLoginPOLKADOT}
                             className='btn btn-outline border-white text-white withdrawButton'
                           >
                             Login
@@ -548,19 +655,19 @@ const [refId,setRefId]=useState('')
                       </div>
                       <div className='col d-flex justify-content-center'>
                         {buttonStatus === 'register' ? (
-                          <div
-                            class='spinner-border text-success'
-                            role='status'
-                          >
-                            <span class='visually-hidden'>Loading...</span>
-                          </div>
+                          <button
+                          onClick={handleUserRegisterPOLKADOT}
+                          className='btn btn-outline border-white text-white withdrawButton'
+                        >
+                          Register
+                        </button>
                         ) : (
                           <button
-                            onClick={handleUserRegister}
-                            className='btn btn-outline border-white text-white withdrawButton'
-                          >
-                            Register
-                          </button>
+                          onClick={handleApprovePOLKADOT}
+                          className='btn btn-outline border-white text-white withdrawButton'
+                        >
+                        Approve  
+                        </button>
                         )}
                       </div>
                     </div>
