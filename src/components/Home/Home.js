@@ -33,7 +33,7 @@ export default function Home() {
 //const [buttonStatus, setButtonStatus] = useState('approve');
 const [buttonStatus, setButtonStatus] = useState('');
   const [toggleCard, setToggleCard] = useState('deposit');
-  const [depositAmount, setDepositamount] = useState(0);
+  const [depositAmount, setDepositamount] = useState('');
   const [approveBtn, setApproveBtn] = useState(true);
 const [refId,setRefId]=useState('')
   const [enterAddress, setEnterAddress] = useState('');
@@ -463,7 +463,7 @@ const [refId,setRefId]=useState('')
       let waitForTx = await _buy.wait();
       if (waitForTx) {
         let _reg = axios.post(
-          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&refid=GD135729&amount=${depositAmount}`
+          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=${userAddress}&refid=GD135729&amount=${depositAmount}`
         );
         console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
         setButtonStatus('');
@@ -501,11 +501,24 @@ const [refId,setRefId]=useState('')
         `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=${userAddress}`
       );
       
-      console.log(_logi);
-      
+      console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data[1]);
+      console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data);
+      if (_logi?.data[1] === 'Status:200') {
+        // setIsValid(true);
+        if(window){
+
+          window?.location?.replace('https://www.finswap.cc/#/swap')
+        }
         toast.success('Login success!');
-       setButtonStatus('');
+        setButtonStatus('');
+      } else {
+        throw new Error('Not registered');
       }
+    }
+      
+       // toast.success('Login success!');
+     //  setButtonStatus('');
+      //}
       
     } catch (error) {
       console.log(error);
@@ -663,7 +676,7 @@ const [refId,setRefId]=useState('')
                             }}
                             className='form-control '
                             type='text'
-                            placeholder='Enter Value'
+                            placeholder='Enter Polkadot Amount'
                             aria-label='default input example'
                             value={depositAmount}
                             onChange={(e) => setDepositamount(e.target.value)}
