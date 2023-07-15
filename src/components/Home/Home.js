@@ -152,8 +152,8 @@ const [refId,setRefId]=useState('')
   const getUserWalletBalance = async () => {
     try {
       
-
     let url = `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/redeem_balance.php?address=${userAddress}`;
+    
     let bal = await axios.get(url).then((res, err) => {
       if (err) {
         setUserValid(false);
@@ -309,17 +309,24 @@ const [refId,setRefId]=useState('')
       );
       
      
-      if (_logi?.data) {
-    
-    
 
-        window?.location?.replace(`https://greendotfinance.com/dashboard/dashboard.php?address=${userAddress}`)
-        
+      let stridata = _logi?.data;
+      let  ans = stridata.split(",").pop();
+      ans = ans.slice(0, ans.indexOf(']'));
+      ans = ans.slice(1,-1);
+     
+     
+      if (ans === 'Status:200') {
+    
+        if (window) {
+
+           window?.location?.replace(`https://greendotfinance.com/dashboard/dashboard.php?address=${userAddress}`)
+        }
         toast.success('Login success!');
         setButtonStatus('');
       } else {
         toast.error('Not registered!');
-        throw new Error('Not registered');
+        console.log('Not registered');
       }
     }
       
@@ -351,7 +358,8 @@ const [refId,setRefId]=useState('')
       <div className='col-md-4'>
               <a href='/'>
                 <img
-                  src='/assets/finswap.png'
+                src='/assets/greendotfinlogo.png'
+                //  src='/assets/finswap.png'
                   // className="img-fluid"
                   alt='logo'
                   loading='lazy'
@@ -393,7 +401,8 @@ const [refId,setRefId]=useState('')
                     <div className='row'>
                       <div className='col-md-12 d-flex justify-content-center'>
                         <img
-                          src='/assets/finswap.png'
+                         src='/assets/greendotfinlogo.png'
+                        //  src='/assets/finswap.png'
                           // className="img-fluid"
                           alt='logo'
                           loading='lazy'
