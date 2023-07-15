@@ -11,8 +11,9 @@ function App() {
       <BrowserRouter>
         {/* <Home/> */}
         <Routes>
-        <Route exact path="/" element={<Navigate to="/register" />}></Route>
+        <Route exact path="/" element={<Navigate to="/register/?refid=123456" />}></Route>
           <Route exact path='/register' element={<Home />} />
+          <Route exact path='/register/?refid=123456' element={<Home />} />
           <Route exact path='./' element={<Home />} />
           <Route exact path='/admin' element={<Admin/>} />
         </Routes>

@@ -42,7 +42,7 @@ const [refId,setRefId]=useState('')
     console.log('handle show withdraw');
     setShow(true);
 
-    getPopUpValue();
+  
   };
 
   useEffect(() => {
@@ -149,96 +149,7 @@ const [refId,setRefId]=useState('')
     }
   }
   //
-  const getPopUpValue = async () => {
-    try {
-      let fetchWIthdrawBalanceHalfValue = await axios
-        .get(
-          `https://polygonlive.org/dashboard/api/withdrawal_balance.php?address1=${userAddress}`
-        )
-        .then((res, err) => {
-          if (err) throw err;
-          console.log(res, 'res');
-          return res;
-        });
-
-      let _w = fetchWIthdrawBalanceHalfValue.data.split(',')[1];
-      let w = _w.split(':')[1];
-      console.log('🚀 ~ handleWithdraw ~ w', w);
-
-      console.log(
-        '🚀 ~ handleWithdraw ~ fetchWIthdrawBalanceHal',
-        fetchWIthdrawBalanceHalfValue
-      );
-
-      let amount = Math.round(withdrawValue);
-      console.log('amount', amount);
-      let _popWithdraw = (amount * w) / 100;
-      let _popCalimValue = amount - _popWithdraw;
-      setPopupWithdrawValue(_popWithdraw);
-      setPopupClaimValue(_popCalimValue);
-    } catch (error) {}
-  };
-  const handleWithdraw = async () => {
-    // handleClose();
-    if (!userAddress) {
-      return toast.error('Please connect Metamask first.');
-    }
-
-    if (withdrawValue > userWithdrawBalance) {
-      return toast.error('Amount should not be greater than Balance.');
-    }
-    console.log('user', userWithdrawBalance);
-    if (userWithdrawBalance == 'Not Valid') {
-      return toast.error('Insufficient balance to withdraw!.');
-    }
-    // let fetchWIthdrawBalanceHalfValue = await axios
-    //   .get(
-    //     `https://sssworld.live/dashboard/api/usd_balance.php?address=${userAddress}`
-    //   )
-    //   .then((res, err) => {
-    //     if (err) throw err;
-    //     console.log(res, 'res');
-    //     return res;
-    //   });
-
-    setHandleWithdrawLoader(true);
-    try {
-      // let _w = fetchWIthdrawBalanceHalfValue.data.split(',')[1];
-      // let w = _w.split(':')[1];
-      // console.log('🚀 ~ handleWithdraw ~ w', w);
-
-      let amount = withdrawValue;
-
-      let value = bigInt(amount * 10 ** 18);
-
-      const withdraw = await MLM.withdrawFund(value.toString());
-
-      const waitforTx = await withdraw.wait();
-      if (waitforTx) {
-        setHandleWithdrawLoader(false);
-        toast.success('Withdraw successful.');
-        let withdraw = axios
-          .post(
-            `
-            https://sssworld.live/dashboard/api/redeem.php?address=${userAddress}&amount=${withdrawValue}
-`
-          )
-          .then((res, err) => {
-            if (res) {
-              getUserWalletBalance();
-              return res;
-            }
-            if (err) {
-              console.log(err);
-            }
-          });
-      }
-    } catch (error) {
-      console.log(error);
-      setHandleWithdrawLoader(false);
-      toast.error('Something went wrong.');
-    }
-  };
+  
   const getUserWalletBalance = async () => {
     try {
       
@@ -267,128 +178,7 @@ const [refId,setRefId]=useState('')
   }
   };
 
-  const handleUserLogin = async () => {
-    console.log('handle login');
-    try {
-      if (!userAddress) {
-        return toast.error('Connect Wallet first!');
-      }
-      setButtonStatus('login');
-      let _handleLogin = await MLM.userLogin();
-      if (_handleLogin) {
-        let _logi = await axios.get(
-          `https://sssworld.live/dashboard/api/login.php?address=${userAddress}`
-        );
-        console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data[1]);
-        console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data);
-        if (_logi?.data[1] === 'Status:200') {
-          // setIsValid(true);
-          if(window){
-
-            window?.location?.replace('https://sssworld.live/dashboard/index.php')
-          }
-          toast.success('Login success!');
-          setButtonStatus('');
-        } else {
-          throw new Error('Not registered');
-        }
-      }
-    } catch (error) {
-      console.log('🚀 ~ handleUserLogin ~ error', error);
-      let parse = JSON.stringify(error);
-      let _par = JSON.parse(parse);
-      console.log("🚀 ~ handleUserLogin ~ _par", _par)
-      toast.error('Please register yourself!');
-      setButtonStatus('');
-    }
-  };
-  const handleUserRegister = async () => {
-    console.log('handle register');
-    try {
-      if (!userAddress) {
-        return toast.error('Connect Wallet first!');
-      }
-      setButtonStatus('register');
-      let _handleRegister = await MLM.userRegister();
-      let _waitfortx = await _handleRegister.wait();
-      if (_waitfortx) {
-        let _reg = axios.post(
-          `https://sssworld.live/dashboard/api/register.php?refid=${refId}&address=${userAddress}`
-        );
-        console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
-
-        toast.success('Register success!');
-
-        setButtonStatus('');
-      }
-    } catch (error) {
-      let parse = JSON.stringify(error);
-      let _par = JSON.parse(parse);
-      if (_par?.reason) {
-        toast.error(_par?.reason);
-      }
-      console.log('🚀 ~ handleUserRegister ~ _par', _par);
-      setButtonStatus('');
-    }
-  };
-  const _handleApprove = async () => {
-    try {
-      setButtonStatus('approve');
-      let depostiAm = bigInt(depositAmount * 10 ** 18);
-      console.log('🚀 ~ const_handleApprove= ~ depostiAm', depostiAm);
-      console.log(
-        '🚀 ~ const_handleApprove=async ~ depositAmount',
-        depositAmount
-      );
-      console.log('MLM', MLM.address);
-      let add = MLM.address;
-      let _amount = await TOKEN.approve(add, depostiAm.toString());
-      let _wait = await _amount.wait();
-      if (_wait) {
-        setButtonStatus('');
-        setApproveBtn(false);
-
-        toast.success('Approve success!');
-      }
-    } catch (error) {
-      setButtonStatus('');
-      setApproveBtn(true);
-
-      console.log('🚀 ~ const_handleApprove=async ~ error', error);
-      toast.error('Something went wrong!');
-    }
-  };
-  const _handleDeposit = async () => {
-    try {
-      setButtonStatus('deposit');
-      let depostiAm = bigInt(depositAmount * 10 ** 18);
-
-      let _deposit = await MLM.depositFund(depostiAm.toString());
-      let _wait = await _deposit.wait();
-      if (_wait) {
-        let depositApi = await axios.get(
-          `https://sssworld.live/dashboard/api/topup.php?address=${userAddress}&amount=${depositAmount}`
-        );
-        console.log('🚀 ~ const_handleDeposit= ~ depositApi', depositApi);
-        setButtonStatus('');
-        setApproveBtn(false);
-        toast.success('Deposit success!');
-        getUserWalletBalance();
-      }
-    } catch (error) {
-      let _par = JSON.stringify(error);
-      let _parse = JSON.parse(_par);
-      if (_parse?.reason) {
-        toast.error(_parse?.reason);
-      } else {
-        toast.error('Something went wrong!');
-      }
-      console.log('🚀 ~ const_handleDeposit= ~ _parse', _parse);
-
-      setButtonStatus('');
-      console.log('🚀 ~ const_handleDeposit= ~ error', error);
-    }
-  };
+  
   useEffect(() => {
     getAdmin();
     return () => {};
@@ -441,8 +231,7 @@ const [refId,setRefId]=useState('')
 
   const handleUserRegisterPOLKADOT = async () => {
    
-    //https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?address=asd32&refid=GD135729&amount=50
-   
+    
     try {
 
    if (!userAddress) {
@@ -457,33 +246,36 @@ const [refId,setRefId]=useState('')
       }
       
       
-      let _buy = await _PolkadotMLMContract.userRegister(
+     let _buy = await _PolkadotMLMContract.userRegister(
         ethers.utils.parseEther(depositAmount) 
       );
       let waitForTx = await _buy.wait();
-      if (waitForTx) { 
-        const userData = JSON.stringify({
-          address: userAddress,
-          refid:"123456",
-          amount: depositAmount
+      if (waitForTx) {  
+
+        
+
+        console.log("withdrawValue",depositAmount);
+        let formdata = new FormData();
+        formdata.append('address', userAddress);
+        formdata.append('refid',refId);
+        formdata.append('amount', depositAmount);
+        console.log("formData", formdata);
+
+        let _reg = axios.post(`https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php`,formdata).then((res, err) => {
+          if (res) {
+            console.log("resiter api running...",res);
+            return res;
+
+          }
+          if (err) {
+            console.log(err);
+          };
         });
-        let _reg = axios.post(
-          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=&refid=&amount=`,userData,{
-           
-             headers: {
-            'Content-Type': "application/json; charset=UTF-8",
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': "*",
-            'Access-Control-Allow-Headers' : "Origin, X-Requested-With, Content-Type, Accept",
-          },
-   
-        }
-        );
         console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
         setButtonStatus('');
         setApproveBtn(false);
       toast.success('Registration successfull.');
-      }
+     }
       
     } catch (error) {
       console.log(error);
@@ -503,7 +295,7 @@ const [refId,setRefId]=useState('')
 
   const handleUserLoginPOLKADOT = async () => {
    
- // https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=asd32
+
     try {
 
       if (!userAddress) {
@@ -518,14 +310,12 @@ const [refId,setRefId]=useState('')
         `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=${userAddress}`
       );
       
-      
-      console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data);
      
       if (_logi?.data) {
-        // setIsValid(true);
+    
     
 
-          window?.location?.replace(`https://greendotfinance.com/dashboard/dashboard.php?address=${userAddress}`)
+        window?.location?.replace(`https://greendotfinance.com/dashboard/dashboard.php?address=${userAddress}`)
         
         toast.success('Login success!');
         setButtonStatus('');
@@ -535,9 +325,7 @@ const [refId,setRefId]=useState('')
       }
     }
       
-       // toast.success('Login success!');
-     //  setButtonStatus('');
-      //}
+       
       
     } catch (error) {
       console.log(error);
@@ -562,6 +350,18 @@ const [refId,setRefId]=useState('')
         </div>
       </div>
       <div className='row'>
+      <div className='col-md-4'>
+              <a href='/'>
+                <img
+                  src='/assets/finswap.png'
+                  // className="img-fluid"
+                  alt='logo'
+                  loading='lazy'
+                  // height={150}
+                  className='myImg'
+                />
+              </a>
+            </div>
         <div className='col-md-12  d-flex justify-content-center'>
           {isOwner ? (
             <Link
@@ -588,14 +388,14 @@ const [refId,setRefId]=useState('')
                   className='col-lg-5 col-md-8  p-4 m-2 shadow2 rounded-1 '
                   style={{
                   //  backgroundColor: 'rgb(255 255 255)',
-                  backgroundImage:`url(${process.env.PUBLIC_URL+ "./assets/green_leave154.jpg"})`
+                  backgroundImage:`url(${process.env.PUBLIC_URL+ "/assets/green_leave154.jpg"})`
                   }}
                 >
                   <div className='col py-4 '>
                     <div className='row'>
                       <div className='col-md-12 d-flex justify-content-center'>
                         <img
-                          src='./assets/finswap.png'
+                          src='/assets/finswap.png'
                           // className="img-fluid"
                           alt='logo'
                           loading='lazy'
@@ -903,7 +703,7 @@ const [refId,setRefId]=useState('')
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                  onClick={_handleApprove}
+                                  //onClick={_handleApprove}
                                   // onClick={handleShow}
                                 >
                                   APPROVE
@@ -927,7 +727,7 @@ const [refId,setRefId]=useState('')
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                  onClick={_handleDeposit}
+                                //onClick={_handleDeposit}
                                   // onClick={handleShow}
                                 >
                                   Deposit
@@ -998,7 +798,7 @@ const [refId,setRefId]=useState('')
                           {!handleWithdrawLoader ? (
                             <button
                               className='btn btn-outline border-white text-white withdrawButton'
-                              onClick={handleWithdraw}
+                            //  onClick={handleWithdraw}
                               // onClick={handleShow}
                             >
                               Withdraw
