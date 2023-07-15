@@ -39,7 +39,7 @@ const [refId,setRefId]=useState('')
   const [enterAddress, setEnterAddress] = useState('');
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    console.log('handle show withdraw');
+   
     setShow(true);
 
   
@@ -88,8 +88,7 @@ const [refId,setRefId]=useState('')
       let url = window.location.href;
       let id=url.split('=')[1]
       setRefId(id)
-      console.log("🚀 ~ handleUrl ~ id", id)
-      console.log("🚀 ~ handleUrl ~ url", url)
+  
         
     } catch (error) {
       console.log("🚀 ~ handleUrl ~ error", error)
@@ -125,7 +124,7 @@ const [refId,setRefId]=useState('')
         });
       return true;
     } else {
-      console.log('Please connect to MetaMask.');
+     
       return false;
     }
   };
@@ -154,19 +153,19 @@ const [refId,setRefId]=useState('')
     try {
       
 
-    let url = `https://sssworld.live/dashboard/api/balance.php?address=${userAddress}`;
+    let url = `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/redeem_balance.php?address=${userAddress}`;
     let bal = await axios.get(url).then((res, err) => {
       if (err) {
         setUserValid(false);
         console.log('err', err);
       }
       if (res) {
-        console.log('🚀 ~ bal ~ res', res);
+       
         setUserValid(true);
         return res;
       }
     });
-    console.log('🚀 ~ bal ~ bal', bal);
+
     if (bal.data == 'Not Valid') {
       setUserWithdrawBalance(0);
     } else {
@@ -185,14 +184,13 @@ const [refId,setRefId]=useState('')
   }, [userAddress]);
 
   const getAdmin = async () => {
-    console.log("🚀 ~ getAdmin ~ userAddress", userAddress)
+    
     try {
       if(userAddress){
         let owner = await MLM.owner();
-        console.log('🚀 ~ getAdmin ~ owner', owner);
-        console.log('🚀 ~ getAdmin ~ userAddress', userAddress);
+        
         if (userAddress.toLowerCase() == owner.toLowerCase()) {
-          console.log('valid');
+         
           setIsOwner(true);
         }
       }
