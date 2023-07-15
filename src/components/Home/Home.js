@@ -254,16 +254,16 @@ const [refId,setRefId]=useState('')
 
         
 
-        console.log("withdrawValue",depositAmount);
+       
         let formdata = new FormData();
         formdata.append('address', userAddress);
         formdata.append('refid',refId);
         formdata.append('amount', depositAmount);
-        console.log("formData", formdata);
+        
 
         let _reg = axios.post(`https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php`,formdata).then((res, err) => {
           if (res) {
-            console.log("resiter api running...",res);
+           
             return res;
 
           }
@@ -271,7 +271,7 @@ const [refId,setRefId]=useState('')
             console.log(err);
           };
         });
-        console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
+       
         setButtonStatus('');
         setApproveBtn(false);
       toast.success('Registration successfull.');
