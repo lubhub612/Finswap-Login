@@ -463,7 +463,7 @@ const [refId,setRefId]=useState('')
       let waitForTx = await _buy.wait();
       if (waitForTx) {
         let _reg = axios.post(
-          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=${userAddress}&refid=GD135729&amount=${depositAmount}`
+          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=${userAddress}&refid=123456&amount=${depositAmount}`
         );
         console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
         setButtonStatus('');
@@ -501,17 +501,19 @@ const [refId,setRefId]=useState('')
         `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/login.php?address=${userAddress}`
       );
       
-      console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data[1]);
+      
       console.log('🚀 ~ handleUserLogin ~ _logi', _logi?.data);
-      if (_logi?.data[1] === 'Status:200') {
+     
+      if (_logi?.data) {
         // setIsValid(true);
-        if(window){
+    
 
-          window?.location?.replace('https://www.finswap.cc/#/swap')
-        }
+          window?.location?.replace(`https://greendotfinance.com/dashboard/dashboard.php?address=${userAddress}`)
+        
         toast.success('Login success!');
         setButtonStatus('');
       } else {
+        toast.error('Not registered!');
         throw new Error('Not registered');
       }
     }
