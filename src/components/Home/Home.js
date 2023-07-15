@@ -461,9 +461,23 @@ const [refId,setRefId]=useState('')
         ethers.utils.parseEther(depositAmount) 
       );
       let waitForTx = await _buy.wait();
-      if (waitForTx) {
+      if (waitForTx) { 
+        const userData = JSON.stringify({
+          address: userAddress,
+          refid:"123456",
+          amount: depositAmount
+        });
         let _reg = axios.post(
-          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=${userAddress}&refid=123456&amount=${depositAmount}`
+          `https://greendotfinance.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/register.php?&address=&refid=&amount=`,userData,{
+           
+             headers: {
+            'Content-Type': "application/json; charset=UTF-8",
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin': "*",
+            'Access-Control-Allow-Headers' : "Origin, X-Requested-With, Content-Type, Accept",
+          },
+   
+        }
         );
         console.log('🚀 ~ handleUserRegister12345 ~ _reg', _reg);
         setButtonStatus('');
@@ -480,6 +494,9 @@ const [refId,setRefId]=useState('')
       }
       console.log( _par);
       setButtonStatus('');
+      if (error.message === "Network Error"){
+        console.log(error); // Works but nothing gets shown
+       }
     }
   };
 

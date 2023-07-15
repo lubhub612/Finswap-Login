@@ -1,7 +1,9 @@
 import './App.css';
 import Admin from './components/Home/Admin';
 import Home from './components/Home/Home';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate,
+  useLocation,
+  useNavigate, } from 'react-router-dom';
 
 function App() {
   return (
@@ -9,6 +11,7 @@ function App() {
       <BrowserRouter>
         {/* <Home/> */}
         <Routes>
+        <Route exact path="/" element={<Navigate to="/register" />}></Route>
           <Route exact path='/register' element={<Home />} />
           <Route exact path='./' element={<Home />} />
           <Route exact path='/admin' element={<Admin/>} />
