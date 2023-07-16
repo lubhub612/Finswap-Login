@@ -30,7 +30,6 @@ export default function Home() {
   const [popUpwithdrawValue, setPopupWithdrawValue] = useState('');
   const [popUpClaimValue, setPopupClaimValue] = useState('');
   const [isValid, setIsValid] = useState(false);
-//const [buttonStatus, setButtonStatus] = useState('approve');
 const [buttonStatus, setButtonStatus] = useState('');
 const [regbuttonStatus, setRegButtonStatus] = useState('');
   const [toggleCard, setToggleCard] = useState('deposit');
@@ -98,7 +97,7 @@ const [refId,setRefId]=useState('')
     
   };
 
-  // const web3Provider = new providers.Web3Provider(provider);
+ 
 
   useEffect(() => {
     if (userAddress) {
@@ -109,9 +108,7 @@ const [refId,setRefId]=useState('')
   }, [userAddress]);
 
   const handleWalletConnect = async () => {
-    // try {
-    //   await provider.enable();
-    // } catch (error) {}
+    
     if (window.ethereum) {
       window.ethereum
         .request({ method: 'eth_requestAccounts' })
@@ -243,7 +240,7 @@ const [refId,setRefId]=useState('')
       if (waitForTx) {
         setButtonStatus('');
         setApproveBtn(false);
-      //  setButtonStatus('register');
+      
       toast.success('Approved successfull.');
       }
     } catch (error) {
@@ -314,7 +311,7 @@ const [refId,setRefId]=useState('')
       console.log( _par);
       setButtonStatus('');
       if (error.message === "Network Error"){
-        console.log(error); // Works but nothing gets shown
+        console.log(error); 
        }
     }
   };
@@ -388,11 +385,10 @@ const [refId,setRefId]=useState('')
               <a href='/'>
                 <img
                 src='/assets/greendotfinlogo.png'
-                //  src='/assets/finswap.png'
-                  // className="img-fluid"
+                
                   alt='logo'
                   loading='lazy'
-                  // height={150}
+                  
                   className='myImg'
                 />
               </a>
@@ -411,9 +407,7 @@ const [refId,setRefId]=useState('')
         </div>
       </div>
 
-      {/* handle address  */}
-
-      {/* handle login  */}
+      
       {!isValid ? (
         <div className='container -fluid '>
           <div className='row mt-5'>
@@ -422,7 +416,7 @@ const [refId,setRefId]=useState('')
                 <div
                   className='col-lg-5 col-md-8  p-4 m-2 shadow2 rounded-1 '
                   style={{
-                  //  backgroundColor: 'rgb(255 255 255)',
+                  
                   backgroundImage:`url(${process.env.PUBLIC_URL+ "/assets/green_leave154.jpg"})`
                   }}
                 >
@@ -431,11 +425,10 @@ const [refId,setRefId]=useState('')
                       <div className='col-md-12 d-flex justify-content-center'>
                         <img
                          src='/assets/greendotfinlogo.png'
-                        //  src='/assets/finswap.png'
-                          // className="img-fluid"
+                        
                           alt='logo'
                           loading='lazy'
-                          // height={150}
+                         
                           className='myImg'
                         />
                       </div>
@@ -445,7 +438,7 @@ const [refId,setRefId]=useState('')
                         {userAddress ? (
                           <button
                             className='dashBoard wallet  btn btn-outline border-white text-white withdrawButton'
-                            // onClick={handleWalletConnect}
+                            
 
                             disabled
                             style={{
@@ -483,32 +476,7 @@ const [refId,setRefId]=useState('')
                       </div>
                     </div>
 
-                  {/*}  <div className='row  mx-2 '>
-                        <div className='col pt-2'>
-                          <label htmlFor='input ' className='pb-2' 
-                           style={{
-                            color: 'rgb(255 255 255)',
-                         }}>
-                            {' '}
-                            Enter Amount
-                          </label>
-                          <input
-                            style={{
-                              backgroundColor: '#D9D9D9',
-                              borderRadius: '5px',
-                              color: '#2f323b ',
-                              fontWeight: '500',
-                              fontSize: '18px',
-                            }}
-                            className='form-control '
-                            type='text'
-                            placeholder='Enter Value'
-                            aria-label='default input example'
-                            value={depositAmount}
-                            onChange={(e) => setDepositamount(e.target.value)}
-                          />
-                        </div>
-                          </div>  */}
+                  
 
                     <div className='row'>
                       <div className='col d-flex justify-content-center'>
@@ -559,21 +527,7 @@ const [refId,setRefId]=useState('')
                         )}
                       </div>
                       <div className='col d-flex justify-content-center'>
-                     {/*}   {buttonStatus === 'register' ? (
-                          <button
-                          onClick={handleUserRegisterPOLKADOT}
-                          className='btn btn-outline border-white text-white withdrawButton'
-                        >
-                          Register
-                        </button>
-                        ) : (
-                          <button
-                          onClick={handleApprovePOLKADOT}
-                          className='btn btn-outline border-white text-white withdrawButton'
-                        >
-                        Approve  
-                        </button>
-                        )}  */}
+                     
                       {regbuttonStatus === '' ? (
                         <>
                       {approveBtn ? (
@@ -591,7 +545,7 @@ const [refId,setRefId]=useState('')
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
                                   onClick={handleApprovePOLKADOT}
-                                  // onClick={handleShow}
+                                  
                                 >
                                   APPROVE
                                 </button>
@@ -615,7 +569,7 @@ const [refId,setRefId]=useState('')
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
                                   onClick={handleUserRegisterPOLKADOT}
-                                  // onClick={handleShow}
+                                 
                                 >
                                   Register
                                 </button>
@@ -640,7 +594,7 @@ const [refId,setRefId]=useState('')
         ''
       )}
 
-      {/* withdraw  */}
+      
       {isValid ? (
         <div className='container mt-5'>
           <div className='container '>
@@ -697,7 +651,7 @@ const [refId,setRefId]=useState('')
                             }}
                           >
                             (My Balance) - ({userWithdrawBalance}
-                            {' SSCOIN'})
+                            {' Polkadot'})
                           </p>
                         </div>
                       </div>
@@ -705,7 +659,7 @@ const [refId,setRefId]=useState('')
                         <div className='col pt-2'>
                           <label htmlFor='input ' className='pb-2'>
                             {' '}
-                            Enter Amount
+                            Enter Polkadot Amount
                           </label>
                           <input
                             style={{
@@ -717,7 +671,7 @@ const [refId,setRefId]=useState('')
                             }}
                             className='form-control '
                             type='text'
-                            placeholder='Enter Value'
+                            placeholder='Enter Polkadot  Value'
                             aria-label='default input example'
                             value={depositAmount}
                             onChange={(e) => setDepositamount(e.target.value)}
@@ -744,8 +698,7 @@ const [refId,setRefId]=useState('')
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                  //onClick={_handleApprove}
-                                  // onClick={handleShow}
+                                 
                                 >
                                   APPROVE
                                 </button>
@@ -768,8 +721,7 @@ const [refId,setRefId]=useState('')
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                //onClick={_handleDeposit}
-                                  // onClick={handleShow}
+                                
                                 >
                                   Deposit
                                 </button>
@@ -804,7 +756,7 @@ const [refId,setRefId]=useState('')
                             }}
                           >
                             (My Balance) - ({userWithdrawBalance}
-                            {' SSCOIN'})
+                            {' POLKADOT'})
                           </p>
                         </div>
                       </div>
@@ -812,7 +764,7 @@ const [refId,setRefId]=useState('')
                         <div className='col pt-2'>
                           <label htmlFor='input ' className='pb-2'>
                             {' '}
-                            Enter Amount
+                            Enter Polkadot Amount
                           </label>
                           <input
                             style={{
@@ -824,7 +776,7 @@ const [refId,setRefId]=useState('')
                             }}
                             className='form-control '
                             type='text'
-                            placeholder='Enter Value'
+                            placeholder='Enter Polkadot Value'
                             aria-label='default input example'
                             value={withdrawValue}
                             onChange={(e) => setWithdrawValue(e.target.value)}
@@ -839,8 +791,7 @@ const [refId,setRefId]=useState('')
                           {!handleWithdrawLoader ? (
                             <button
                               className='btn btn-outline border-white text-white withdrawButton'
-                            //  onClick={handleWithdraw}
-                              // onClick={handleShow}
+                            
                             >
                               Withdraw
                             </button>
@@ -874,26 +825,7 @@ const [refId,setRefId]=useState('')
             ''
           )}
 
-          {/* <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                <h4 className='text-dark'>Transaction </h4>
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <p className='text-dark'>Are you sure ?</p>
-              <p className='text-dark'>Withdraw Value {popUpwithdrawValue}</p>
-              <p className='text-dark'>Claim Value {popUpClaimValue} </p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant='danger' onClick={handleClose}>
-                Reject
-              </Button>
-              <Button variant='primary' onClick={handleWithdraw}>
-                Confirm
-              </Button>
-            </Modal.Footer>
-          </Modal> */}
+          
         </div>
       ) : (
         ''
