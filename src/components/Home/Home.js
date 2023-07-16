@@ -32,6 +32,7 @@ export default function Home() {
   const [isValid, setIsValid] = useState(false);
 //const [buttonStatus, setButtonStatus] = useState('approve');
 const [buttonStatus, setButtonStatus] = useState('');
+const [regbuttonStatus, setRegButtonStatus] = useState('');
   const [toggleCard, setToggleCard] = useState('deposit');
   const [depositAmount, setDepositamount] = useState('');
   const [approveBtn, setApproveBtn] = useState(true);
@@ -102,6 +103,7 @@ const [refId,setRefId]=useState('')
   useEffect(() => {
     if (userAddress) {
       getUserWalletBalance();
+      getUserStatus();
     }
     return () => {};
   }, [userAddress]);
@@ -148,6 +150,33 @@ const [refId,setRefId]=useState('')
     }
   }
   //
+
+  const getUserStatus = async () => {
+
+    try {
+
+      if (!userAddress) {
+        return toast.error('Connect Wallet first!');
+      }
+      let _PolkadotMLMContract = await PolkadotMLMContract();
+    
+    
+      let _handleLogin = await _PolkadotMLMContract.userLogin();
+      if (_handleLogin) {
+        setRegButtonStatus('userLogged');
+    }
+      
+       
+      
+    } catch (error) {
+      console.log(error);
+       let parse = JSON.stringify(error);
+      let _par = JSON.parse(parse);
+      console.log( _par);
+     
+    }
+
+  };  
   
   const getUserWalletBalance = async () => {
     try {
@@ -545,7 +574,8 @@ const [refId,setRefId]=useState('')
                         Approve  
                         </button>
                         )}  */}
-
+                      {regbuttonStatus === '' ? (
+                        <>
                       {approveBtn ? (
                             <>
                               {buttonStatus === 'approve' ? (
@@ -594,6 +624,10 @@ const [refId,setRefId]=useState('')
                           ) : (
                             ''
                           )}
+                          </>
+                     ) : (
+                      ''
+                    )}
                         </div> 
                     </div>
                   </div>
